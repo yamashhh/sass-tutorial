@@ -1,0 +1,86 @@
+// Import resets
+@import "./resets";
+@import "./variables";
+
+// Vanilla CSS Variables
+:root {
+  --primary-color: #272727;
+  --accent-color: #ff652f;
+  --text-color: #fff;
+}
+
+// Sass function
+// => used to compute and return values
+@function weight($weight-name) {
+  @return map-get($font-weights, $weight-name);
+}
+
+// Sass mixin
+// => used to define style
+@mixin flexCenter($direction) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) {
+  // Sass if statement
+  @if $light-theme {
+    background: lighten($primary-color, 100%);
+    color: darken($text-color, 100%);
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+    // => .main { flex-direction: column; }
+  }
+}
+
+body {
+  // Using a CSS Variable
+  // background: var(--primary-color);
+
+  // Using a Sass Variable
+  background: $primary-color;
+  color: $text-color;
+}
+
+.main {
+  @include flexCenter(row);
+  // Vanilla CSS calc (CAN mix types)
+  // width: calc(80% - 400px);
+  // Sass calc (CAN NOT mix types)
+  width: 80% - 40%;
+  margin: 0 auto;
+
+  // Sass Nesting
+  #{&}__paragraph1 {
+    // Using a Sass Map
+    font-weight: weight(bold);
+
+    &:hover {
+      color: pink;
+    }
+  }
+
+  #{&}__paragraph2 {
+    // Sass extend
+    @extend .main__paragraph1;
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+
+  @include mobile {
+    flex-direction: column;
+    // => @content
+  }
+}
+
+.light {
+  @include theme($light-theme: true);
+}
